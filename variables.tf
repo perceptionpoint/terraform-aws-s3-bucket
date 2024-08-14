@@ -51,7 +51,10 @@ variable "lifecycle_rules" {
     prefix = optional(string)
     expiration = optional(string)
     enabled = optional(bool, true)
-    STANDARD_IA = optional(string)
+    transition = optional(object({
+        days = string
+        storage_class = string
+    }))
   }))
 }
 

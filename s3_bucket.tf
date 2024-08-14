@@ -132,12 +132,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket-lifecycle-configuration
           expired_object_delete_marker = false
         }
       }
-
+         
       dynamic transition {
-        for_each = rule.value["STANDARD_IA"] == null ? [] : [1]
+        for_each = rule.value["transition"] == null ? [] : [1]
+
         content {
-          days = rule.value["STANDARD_IA"]
-          storage_class = "STANDARD_IA"
+          days = try(rule.value["transition"]["days"], null)
+          storage_class = rule.value["transition"]["storage_class"] == null ? "STANDARD_IA" : rule.value["transition"]["storage_class"]
         }
       }
 
@@ -149,10 +150,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket-lifecycle-configuration
       }
 
       dynamic noncurrent_version_transition {
-        for_each = rule.value["STANDARD_IA"] == null ? [] : [1]
+        for_each = rule.value["transition"] == null ? [] : [1]
+
         content {
-          noncurrent_days = rule.value["STANDARD_IA"]
-          storage_class = "STANDARD_IA"
+          noncurrent_days = try(rule.value["transition"]["days"], null)
+          storage_class = rule.value["transition"]["storage_class"] == null ? "STANDARD_IA" : rule.value["transition"]["storage_class"]
         }
       }
     }
