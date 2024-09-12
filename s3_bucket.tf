@@ -10,9 +10,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket-encryption
   bucket = aws_s3_bucket.bucket.bucket
 
   rule {
-    bucket_key_enabled = true
+    bucket_key_enabled = var.encryption_rule_configuration["bucket_key_enabled"]
     apply_server_side_encryption_by_default {
-      sse_algorithm     = "AES256"
+      sse_algorithm     = var.encryption_rule_configuration["sse_algorithm"]
+      kms_master_key_id = var.encryption_rule_configuration["kms_master_key_id"]
     }
   }
   count = var.encrypt_bucket? 1 : 0
