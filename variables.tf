@@ -4,6 +4,17 @@ variable "encrypt_bucket" {
   default = true
   type = bool
 }
+variable "encryption_rule_configuration" {
+  type = object({
+    bucket_key_enabled = optional(bool, true)
+    sse_algorithm = optional(string, "AES256")
+    kms_master_key_id = optional(string)
+  })
+  default = {
+    bucket_key_enabled = true
+    sse_algorithm = "AES256"
+  }
+}
 variable "bucket_policy_document" {
     type = string
     default = null
