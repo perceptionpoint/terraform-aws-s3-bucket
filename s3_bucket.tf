@@ -193,3 +193,38 @@ resource "aws_s3_bucket_acl" "bucket-acl" {
 
   count = (var.access_control_policy != null) ? 1 : 0
 }
+
+
+resource "aws_s3_bucket_notification" "sqs_notifications" {
+  bucket = aws_s3_bucket.bucket.id
+
+  dynamic queue {
+    for_each = var.sqs_notifications
+    content {
+      events = queue.value["events"]
+      filter_prefix = queue.value["filter_prefix"]
+      filter_suffix = queue.value["filter_suffix"]
+      id = queue.value["id"]
+      queue_arn = queue.value["queue_arn"]
+    }
+  }
+
+  count = (var.sqs_notifications != null)? 1 : 0
+}
+
+resource "aws_s3_bucket_notification" "sns_notifications" {
+  bucket = aws_s3_bucket.bucket.id
+
+  dynamic topic {
+    for_each = var.sns_notifications
+    content {
+      events = topic.value["events"]
+      filter_prefix = topic.value["filter_prefix"]
+      filter_suffix = topic.value["filter_suffix"]
+      id = topic.value["id"]
+      topic_arn = topic.value["topic_arn"]
+    }
+  }
+
+  count = (var.sns_notifications != null)? 1 : 0
+}
