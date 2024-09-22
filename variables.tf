@@ -81,3 +81,25 @@ variable "access_control_policy" {
     }))
   })
 }
+
+variable sqs_notifications {
+    default = null
+    type = list(object({
+      events = list(string)
+      filter_prefix = optional(string)
+      filter_suffix = optional(string)
+      id = optional(string)
+      queue_arn = string
+    }))
+  }
+
+variable sns_notifications {
+    default = null
+    type = list(object({
+      events = list(string)
+      filter_prefix = optional(string)
+      filter_suffix = optional(string)
+      id = optional(string)
+      topic_arn = string
+    }))
+  }
