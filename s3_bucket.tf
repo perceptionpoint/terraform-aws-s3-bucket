@@ -195,7 +195,7 @@ resource "aws_s3_bucket_acl" "bucket-acl" {
 }
 
 
-resource "aws_s3_bucket_notification" "sqs_notifications" {
+resource "aws_s3_bucket_notification" "bucket_notifications" {
   bucket = aws_s3_bucket.bucket.id
 
   dynamic queue {
@@ -209,12 +209,6 @@ resource "aws_s3_bucket_notification" "sqs_notifications" {
     }
   }
 
-  count = (var.sqs_notifications != null)? 1 : 0
-}
-
-resource "aws_s3_bucket_notification" "sns_notifications" {
-  bucket = aws_s3_bucket.bucket.id
-
   dynamic topic {
     for_each = var.sns_notifications
     content {
@@ -226,5 +220,5 @@ resource "aws_s3_bucket_notification" "sns_notifications" {
     }
   }
 
-  count = (var.sns_notifications != null)? 1 : 0
+  count = length(concat(var.sqs_notifications,var.sns_notifications)) > 0 ? 1 : 0
 }
