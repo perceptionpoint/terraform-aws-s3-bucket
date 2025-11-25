@@ -83,7 +83,7 @@ variable "access_control_policy" {
 }
 
 variable sqs_notifications {
-    default = null
+    default = []
     type = list(object({
       events = list(string)
       filter_prefix = optional(string)
@@ -94,7 +94,7 @@ variable sqs_notifications {
   }
 
 variable sns_notifications {
-    default = null
+    default = []
     type = list(object({
       events = list(string)
       filter_prefix = optional(string)
