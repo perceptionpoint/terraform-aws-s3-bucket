@@ -61,6 +61,8 @@ variable "lifecycle_rules" {
     id = optional(string)
     prefix = optional(string)
     expiration = optional(string)
+    # Defaults to expiration.
+    noncurrent_expiration = optional(string)
     enabled = optional(bool, true)
     transition = optional(object({
         days = string

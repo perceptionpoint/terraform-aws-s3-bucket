@@ -144,14 +144,15 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket-lifecycle-configuration
       }
 
       dynamic noncurrent_version_expiration {
-        for_each = rule.value["expiration"] == null ? [] : [1]
+        for_each = (rule.value["noncurrent_expiration"] == null && rule.value["expiration"] == null) ? [] : [1]
         content {
-          noncurrent_days = rule.value["expiration"]
+          noncurrent_days = coalesce(rule.value["noncurrent_expiration"], rule.value["expiration"])
         }
       }
 
+      # A noncurrent transition on or after the noncurrent expiry would never run.
       dynamic noncurrent_version_transition {
-        for_each = rule.value["transition"] == null ? [] : [1]
+        for_each = (rule.value["transition"] == null || try(tonumber(rule.value["noncurrent_expiration"]) <= tonumber(rule.value["transition"]["days"]), false)) ? [] : [1]
 
         content {
           noncurrent_days = try(rule.value["transition"]["days"], null)
